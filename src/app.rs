@@ -283,6 +283,16 @@ fn handle_key(
             Tab => app.screen = app.screen.next(),
             BackTab => app.screen = app.screen.prev(),
             Esc => app.projects_focus = Focus::List,
+            Char('l') | Right | Enter => {
+                if let Some(u) = &app.selected_project().and_then(|p| p.live_url.clone()) {
+                    open_url(u);
+                }
+            }
+            Char('s') | Char('S') => {
+                if let Some(u) = &app.selected_project().and_then(|p| p.source_code.clone()) {
+                    open_url(u);
+                }
+            }
             _ if app.projects_focus == Focus::Detail => {
                 scroll_key(key.code, &mut app.projects_scroll);
             }
@@ -293,16 +303,6 @@ fn handle_key(
             Char('k') | Up => {
                 app.projects_idx = prev_idx(app.projects_idx);
                 app.projects_scroll = 0;
-            }
-            Char('l') | Right | Enter => {
-                if let Some(u) = &app.selected_project().and_then(|p| p.live_url.clone()) {
-                    open_url(u);
-                }
-            }
-            Char('s') | Char('S') => {
-                if let Some(u) = &app.selected_project().and_then(|p| p.source_code.clone()) {
-                    open_url(u);
-                }
             }
             _ => {}
         },
