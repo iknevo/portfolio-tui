@@ -49,7 +49,7 @@ pub fn draw(f: &mut Frame, area: Rect, _app: &mut App) {
     let blurb = Text::from(vec![
         Line::from(vec![
             Span::styled("Ahmed Abdelhafiez  ·  ", theme::heading()),
-            Span::styled("frontend developer", theme::heading()),
+            Span::styled("Front-End developer", theme::heading()),
         ])
         .alignment(Alignment::Center),
         Line::from(identity::TAGLINE).alignment(Alignment::Center),
@@ -68,7 +68,6 @@ pub fn draw(f: &mut Frame, area: Rect, _app: &mut App) {
             Line::from(vec![
                 Span::styled(format!("{age} years old"), theme::accent()),
                 Span::styled(" · Cairo, Egypt", theme::heading()),
-                Span::styled(" · i can't stop configuring my code editor", theme::dim()),
             ])
             .alignment(Alignment::Center),
         ),

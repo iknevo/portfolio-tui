@@ -13,8 +13,7 @@ pub const SOCIALS: &[(&str, &str)] = &[
     ("linkedin", "https://www.linkedin.com/in/ahmed-abdelhafiez"),
 ];
 
-pub const TAGLINE: &str =
-    "Frontend web developer based in Cairo, Egypt. I turn ideas into seamless, scalable, and \
+pub const TAGLINE: &str = "I turn ideas into seamless, scalable, and \
      performant user experiences.";
 
 pub fn age() -> u32 {

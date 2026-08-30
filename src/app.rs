@@ -266,14 +266,6 @@ fn handle_key(
     match app.screen {
         Screen::Home => match key.code {
             Char('q') => return true,
-            Char('o') | Char('O') => open_mailto("iknevo.dev@gmail.com"),
-            Char('p') | Char('P') => {
-                if let Some(p) = app.selected_project() {
-                    if let Some(u) = &p.live_url {
-                        open_url(u);
-                    }
-                }
-            }
             _ => {}
         },
         Screen::Projects => match key.code {

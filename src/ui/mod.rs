@@ -7,9 +7,11 @@ pub mod stack;
 
 use ratatui::{
     layout::{Constraint, Direction, Layout, Rect},
-    style::{Style},
+    style::Style,
     text::{Line, Span},
-    widgets::{Block, BorderType, Borders, Paragraph, Scrollbar, ScrollbarOrientation, ScrollbarState},
+    widgets::{
+        Block, BorderType, Borders, Paragraph, Scrollbar, ScrollbarOrientation, ScrollbarState,
+    },
     Frame,
 };
 
@@ -25,12 +27,11 @@ pub fn draw(f: &mut Frame, app: &mut App) {
             Constraint::Length(1),
             Constraint::Length(1),
             Constraint::Min(0),
-            Constraint::Length(1),
+            Constraint::Length(if app.screen == Screen::Home { 0 } else { 1 }),
         ])
         .split(area);
 
-    render_header(f, chunks[0]);
-    render_tabs(f, chunks[1], app.screen);
+    render_header_and_tabs(f, chunks[0], app.screen);
 
     match app.screen {
         Screen::Home => home::draw(f, chunks[2], app),
@@ -41,21 +42,31 @@ pub fn draw(f: &mut Frame, app: &mut App) {
         Screen::Links => links::draw(f, chunks[2], app),
     }
 
-    render_footer(f, chunks[3], app.screen);
+    if app.screen != Screen::Home {
+        render_footer(f, chunks[3], app.screen);
+    }
 }
 
-fn render_header(f: &mut Frame, area: Rect) {
+fn render_header_and_tabs(f: &mut Frame, area: Rect, screen: Screen) {
+    let inner = ratatui::layout::Rect {
+        x: area.x.saturating_add(2),
+        width: area.width.saturating_sub(4),
+        ..area
+    };
+    let cols = Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints([Constraint::Min(1), Constraint::Min(1)])
+        .split(inner);
+
     f.render_widget(
         Paragraph::new(Line::from(vec![
             Span::styled("NEVO", theme::accent()),
-            Span::styled("  ·  terminal portfolio", theme::heading()),
+            Span::styled(" - i love terminals", theme::heading()),
         ]))
         .alignment(ratatui::layout::Alignment::Left),
-        area,
+        cols[0],
     );
-}
 
-fn render_tabs(f: &mut Frame, area: Rect, screen: Screen) {
     let mut spans: Vec<Span<'static>> = Vec::new();
     for (i, tab) in Screen::ALL.iter().enumerate() {
         if i > 0 {
@@ -63,22 +74,25 @@ fn render_tabs(f: &mut Frame, area: Rect, screen: Screen) {
         }
         spans.push(Span::styled(format!("{} ", i + 1), theme::muted()));
         if *tab == screen {
-            spans.push(Span::styled(tab.label(), theme::accent()));
+            spans.push(Span::styled(
+                tab.label(),
+                theme::accent().add_modifier(ratatui::style::Modifier::BOLD),
+            ));
         } else {
             spans.push(Span::styled(tab.label(), Style::default().fg(theme::DIM)));
         }
     }
 
-    f.render_widget(Paragraph::new(Line::from(spans)).alignment(ratatui::layout::Alignment::Left), area);
+    f.render_widget(
+        Paragraph::new(Line::from(spans)).alignment(ratatui::layout::Alignment::Right),
+        cols[1],
+    );
 }
 
 fn render_footer(f: &mut Frame, area: Rect, screen: Screen) {
     f.render_widget(
-        Paragraph::new(Line::from(Span::styled(
-            footer_for(screen),
-            theme::dim(),
-        )))
-        .alignment(ratatui::layout::Alignment::Center),
+        Paragraph::new(Line::from(Span::styled(footer_for(screen), theme::dim())))
+            .alignment(ratatui::layout::Alignment::Center),
         area,
     );
 }
