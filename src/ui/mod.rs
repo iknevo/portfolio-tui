@@ -165,7 +165,7 @@ fn footer_for(tab: Screen) -> &'static str {
         Screen::Stack => "j/k/pgup/pgdn scroll   g/G top/bottom   q quit",
         Screen::Experience => "j/k/pgup/pgdn scroll   g/G top/bottom   q quit",
         Screen::Blog => "j/k move   f focus   enter/l read   esc back   q quit",
-        Screen::Links => "g github   l linkedin   e email   r resume   q quit",
+        Screen::Links => "g github   l linkedin   w web   e email   r resume   q quit",
     }
 }
 

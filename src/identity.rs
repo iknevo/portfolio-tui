@@ -2,7 +2,11 @@ pub const BIRTH_DATE: &str = "2002-09-21";
 
 pub const EMAIL: &str = "iknevo.dev@gmail.com";
 
+pub const EMAIL_WORK: &str = "ahmed.abdelhafiez.work@outlook.com";
+
 pub const RESUME_URL: &str = "https://nevo.is-a.dev/resume";
+
+pub const WEB_URL: &str = "https://nevo.is-a.dev";
 
 pub const SOCIALS: &[(&str, &str)] = &[
     ("github", "https://github.com/iknevo"),

@@ -13,7 +13,8 @@ pub fn draw(f: &mut Frame, area: ratatui::layout::Rect, _app: &mut App) {
         lines.push(line(format!("[{}]", key_for(i)), name, url));
     }
     lines.push(line("[e]".to_string(), "email", identity::EMAIL));
-    lines.push(Line::from(""));
+    lines.push(line("[o]".to_string(), "work", identity::EMAIL_WORK));
+    lines.push(line("[w]".to_string(), "web", identity::WEB_URL));
     lines.push(line("[r]".to_string(), "resume", identity::RESUME_URL));
 
     f.render_widget(
