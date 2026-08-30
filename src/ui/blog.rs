@@ -61,18 +61,35 @@ fn draw_list(f: &mut Frame, area: Rect, app: &mut App) {
     f.render_stateful_widget(list, area, &mut state);
 }
 
+const SPINNER: [char; 10] = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+
 fn draw_reader(f: &mut Frame, area: Rect, app: &mut App) {
     let focused = app.blog_focus == Focus::Detail;
     let block = ui::panel_for("READER", focused);
-    let base: Vec<Line> = match &app.blog_post {
-        LoadState::Loading => vec![Line::from(Span::styled(
-            "select a post (enter)…",
-            theme::muted(),
-        ))],
-        LoadState::Error(e) => vec![Line::from(Span::styled(format!("! {e}"), Color::Red))],
-        LoadState::Ready(Some(post)) => render_post(post),
-        LoadState::Ready(None) => vec![Line::from(Span::styled("no post", theme::muted()))],
-    };
+    let base: Vec<Line>;
+    match &app.blog_post {
+        LoadState::Loading if app.blog_reading => {
+            let spin = SPINNER[app.blog_spinner % SPINNER.len()];
+            base = vec![Line::from(vec![
+                Span::styled(spin.to_string(), theme::accent()),
+                Span::styled("  loading post…", theme::dim()),
+            ])];
+            app.blog_spinner += 1;
+        }
+        LoadState::Loading => {
+            base = vec![Line::from(Span::styled(
+                "select a post (enter)…",
+                theme::muted(),
+            ))];
+        }
+        LoadState::Error(e) => {
+            base = vec![Line::from(Span::styled(format!("! {e}"), Color::Red))];
+        }
+        LoadState::Ready(Some(post)) => base = render_post(post),
+        LoadState::Ready(None) => {
+            base = vec![Line::from(Span::styled("no post", theme::muted()))];
+        }
+    }
 
     if !matches!(&app.blog_post, LoadState::Ready(Some(_))) {
         f.render_widget(Paragraph::new(base).block(block), area);

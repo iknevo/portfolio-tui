@@ -92,6 +92,8 @@ pub struct App {
     pub blog: LoadState<Vec<BlogSummary>>,
     pub blog_post: LoadState<Option<BlogPost>>,
     pub resume: LoadState<Option<Resume>>,
+    pub blog_reading: bool,
+    pub blog_spinner: usize,
     pub projects_idx: usize,
     pub blog_idx: usize,
     pub stack_scroll: u16,
@@ -113,6 +115,8 @@ impl App {
             blog: LoadState::Loading,
             blog_post: LoadState::Loading,
             resume: LoadState::Loading,
+            blog_reading: false,
+            blog_spinner: 0,
             projects_idx: 0,
             blog_idx: 0,
             stack_scroll: 0,
@@ -133,6 +137,7 @@ impl App {
             LoadingMsg::Blog(r) => self.blog = into_state(r),
             LoadingMsg::BlogPost(r) => {
                 self.blog_post = into_state(r);
+                self.blog_reading = false;
                 self.blog_scroll = 0;
             }
             LoadingMsg::Resume(r) => self.resume = into_state(r),
@@ -325,6 +330,7 @@ fn handle_key(
             Char('h') | Left => {
                 app.screen = Screen::Home;
                 app.blog_post = LoadState::Loading;
+                app.blog_reading = false;
                 *blog_rx = None;
             }
             Esc => {
@@ -332,6 +338,7 @@ fn handle_key(
                     app.blog_focus = Focus::List;
                 } else {
                     app.blog_post = LoadState::Loading;
+                    app.blog_reading = false;
                     *blog_rx = None;
                 }
             }
@@ -352,6 +359,7 @@ fn handle_key(
                 if let Some(post) = app.selected_blog() {
                     if let Some(id) = post._id.clone() {
                         app.blog_post = LoadState::Loading;
+                        app.blog_reading = true;
                         app.blog_scroll = 0;
                         *blog_rx = Some(spawn_blog_load(api.clone(), id));
                     }
