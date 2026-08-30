@@ -1,8 +1,8 @@
 # portfolio-tui
 
-A terminal-based (TUI) portfolio app built in Rust with [ratatui](https://github.com/ratatui/ratatui) and [crossterm](https://github.com/crossterm-rs/crossterm). It renders my portfolio — projects, tech stack, work experience, blog posts, and contact links — right in your terminal, fetching live data from the web portfolio's API.
+A terminal-based (TUI) portfolio app built in Rust with [ratatui](https://github.com/ratatui/ratatui) and [crossterm](https://github.com/crossterm-rs/crossterm). It renders a TUI version of my portfolio - projects, tech stack, work experience, blog posts, and contact links - right in your terminal, fetching live data from the web portfolio's API.
 
-It is the terminal companion to the web portfolio at [nevo.is-a.dev](https://nevo.is-a.dev).
+It is the terminal companion to the web version at [nevo.is-a.dev](https://nevo.is-a.dev).
 
 ## Screens
 
