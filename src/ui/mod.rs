@@ -174,7 +174,7 @@ pub fn render_scrollable<'a>(f: &mut Frame, para: Paragraph<'a>, area: Rect, off
 
 fn footer_for(tab: Screen) -> &'static str {
     match tab {
-        Screen::Home => "[p] top project   [o] email   [q] quit",
+        Screen::Home => "[1-6] go to screen   [tab] next   [q] quit",
         Screen::Projects => "j/k move   f focus   enter/l live   s source   q quit",
         Screen::Stack => "j/k/pgup/pgdn scroll   g/G top/bottom   q quit",
         Screen::Experience => "j/k/pgup/pgdn scroll   g/G top/bottom   q quit",
