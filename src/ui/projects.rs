@@ -33,8 +33,12 @@ fn draw_list(f: &mut Frame, area: Rect, app: &mut App) {
         )))],
         LoadState::Ready(projects) => projects
             .iter()
-            .map(|p| {
-                let mut lines = vec![Line::from(Span::styled(p.name.clone(), theme::heading()))];
+            .enumerate()
+            .map(|(i, p)| {
+                let mut lines = vec![Line::from(vec![
+                    Span::styled(format!("{}. ", i + 1), theme::accent()),
+                    Span::styled(p.name.clone(), theme::heading()),
+                ])];
                 let stack = p.tech_stack.iter().take(3).cloned().collect::<Vec<_>>().join(" · ");
                 if !stack.is_empty() {
                     lines.push(Line::from(Span::styled("  ".to_string() + &stack, theme::dim())));

@@ -31,17 +31,21 @@ pub fn draw(f: &mut Frame, area: ratatui::layout::Rect, app: &mut App) {
                     .clone()
                     .unwrap_or_else(|| "Present".to_string());
                 lines.push(Line::from(vec![
+                    Span::styled(format!("{}. ", i + 1), theme::accent()),
                     Span::styled(item.company.clone(), theme::accent()),
                     Span::styled("  ·  ", theme::muted()),
                     Span::styled(format!("{start} — {end}", start = item.start_date), theme::dim()),
                 ]));
-                lines.push(Line::from(Span::styled(item.title.clone(), theme::text())));
+                lines.push(Line::from(Span::styled(
+                    format!("   {}", item.title.clone()),
+                    theme::text(),
+                )));
             }
         }
     }
 
     let content = Paragraph::new(lines)
         .block(ui::panel("EXPERIENCE"))
-        .wrap(Wrap { trim: true });
+        .wrap(Wrap { trim: false });
     ui::render_scrollable(f, content, area, app.exp_scroll);
 }

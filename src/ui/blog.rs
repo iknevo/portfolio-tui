@@ -33,8 +33,12 @@ fn draw_list(f: &mut Frame, area: Rect, app: &mut App) {
         )))],
         LoadState::Ready(posts) => posts
             .iter()
-            .map(|p| {
-                let mut lines = vec![Line::from(Span::styled(p.title.clone(), theme::heading()))];
+            .enumerate()
+            .map(|(i, p)| {
+                let mut lines = vec![Line::from(vec![
+                    Span::styled(format!("{}. ", i + 1), theme::accent()),
+                    Span::styled(p.title.clone(), theme::heading()),
+                ])];
                 let meta = p
                     .reading_time
                     .clone()
