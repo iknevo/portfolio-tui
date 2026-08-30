@@ -428,7 +428,7 @@ mod tests {
     fn home_logo_scales_with_width() {
         let out = draw_screen_size(Screen::Home, &mut sample_app(), 120, 40);
         assert!(
-            out.contains("████████╗"),
+            out.contains("████████████"),
             "at 120 cols the logo should be doubled (S=2):\n{out}"
         );
     }
@@ -437,7 +437,7 @@ mod tests {
     fn home_logo_stays_small_on_narrow() {
         let out = draw_screen_size(Screen::Home, &mut sample_app(), 80, 24);
         assert!(
-            !out.contains("████████╗"),
+            !out.contains("████████████"),
             "at 80 cols the logo must stay single-size (S=1):\n{out}"
         );
     }
