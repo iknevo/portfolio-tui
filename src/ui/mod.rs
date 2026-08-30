@@ -311,7 +311,10 @@ mod tests {
         let mut app = sample_app();
         let out = draw_screen(Screen::Home, &mut app);
         assert!(out.contains("NEVO"), "home should show NEVO logo");
-        assert!(out.to_lowercase().contains("cairo"), "home should mention Cairo");
+        assert!(
+            out.to_lowercase().contains("cairo"),
+            "home should mention Cairo"
+        );
     }
 
     #[test]
@@ -320,6 +323,27 @@ mod tests {
         let out = draw_screen(Screen::Projects, &mut app);
         assert!(out.contains("Smart Care"));
         assert!(out.contains("Next.js"));
+    }
+
+    #[test]
+    fn home_has_no_footer_and_keeps_nav() {
+        let mut app = sample_app();
+        let home = draw_screen_size(Screen::Home, &mut app, 120, 40);
+        assert!(
+            home.lines().any(|l| {
+                let l = l.to_lowercase();
+                l.contains("nevo") && l.contains("1 home")
+            }),
+            "brand and nav should share one line:\n{home}"
+        );
+        assert!(
+            home.to_lowercase().contains("select a tab") || home.contains("NEVO"),
+            "home content should still render"
+        );
+        assert!(
+            !home.contains("top project"),
+            "home footer with top project should be gone"
+        );
     }
 
     #[test]
@@ -338,7 +362,36 @@ mod tests {
         let focused = draw_screen_size(Screen::Projects, &mut app, 120, 40);
         app.projects_focus = crate::app::Focus::Detail;
         let unfocused = draw_screen_size(Screen::Projects, &mut app, 120, 40);
-        assert_ne!(focused, unfocused, "focusing the detail pane should restyle the UI");
+        assert_ne!(
+            focused, unfocused,
+            "focusing the detail pane should restyle the UI"
+        );
+    }
+
+    #[test]
+    fn blog_reader_shows_loading_when_reading() {
+        use crate::app::LoadState;
+        let mut app = sample_app();
+        // While a post body is being fetched, show a loader distinct from idle.
+        app.blog_post = LoadState::Loading;
+        app.blog_reading = true;
+        let loading = draw_screen_size(Screen::Blog, &mut app, 120, 40);
+        assert!(
+            loading.to_lowercase().contains("loading"),
+            "reader should indicate an active load:\n{loading}"
+        );
+        assert!(
+            !loading.to_lowercase().contains("select a post"),
+            "loading state must not show the idle hint:\n{loading}"
+        );
+
+        // Fresh/intro state shows the idle hint instead.
+        app.blog_reading = false;
+        let idle = draw_screen_size(Screen::Blog, &mut app, 120, 40);
+        assert!(
+            idle.to_lowercase().contains("select a post"),
+            "idle state should show the select hint:\n{idle}"
+        );
     }
 
     #[test]
@@ -381,8 +434,20 @@ mod tests {
         assert!(out.contains("[l]"), "links should show [l] linkedin");
         assert!(out.contains("[e]"), "links should show [e] email");
         assert!(
-            !out.contains("[1] github") && !out.contains("[2] linkedin") && !out.contains("[3] email"),
+            !out.contains("[1] github")
+                && !out.contains("[2] linkedin")
+                && !out.contains("[3] email"),
             "socials must not collide with the number navigation:\n{out}"
+        );
+    }
+
+    #[test]
+    fn links_show_web_version() {
+        let out = draw_screen(Screen::Links, &mut sample_app());
+        assert!(out.contains("[w]"), "links should show [w] web");
+        assert!(
+            out.contains("https://nevo.is-a.dev"),
+            "links should show the web URL:\n{out}"
         );
     }
 
@@ -454,5 +519,36 @@ mod tests {
             !out.contains("████████████"),
             "at 80 cols the logo must stay single-size (S=1):\n{out}"
         );
+    }
+
+    #[test]
+    fn stack_items_wrap_with_hanging_indent() {
+        let mut app = sample_app();
+        app.stack = crate::app::LoadState::Ready(vec![StackGroup {
+            type_name: "frontend".into(),
+            items: (0..12)
+                .map(|i| StackItem {
+                    name: format!("Framework{i}"),
+                    icon: String::new(),
+                    r#type: "frontend".into(),
+                })
+                .collect(),
+        }]);
+        let out = draw_screen_size(Screen::Stack, &mut app, 40, 24);
+        let rows: Vec<&str> = out
+            .lines()
+            .filter(|l| l.contains('•'))
+            .map(|l| l.trim_start_matches('│').trim_start())
+            .collect();
+        assert!(
+            rows.len() >= 3,
+            "long group should wrap into several bullet rows:\n{out}"
+        );
+        for row in rows {
+            assert!(
+                row.starts_with("• "),
+                "every item row must lead with a bullet:\n{out}"
+            );
+        }
     }
 }
