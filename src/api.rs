@@ -122,7 +122,7 @@ pub struct Api {
 impl Api {
     pub fn new() -> Self {
         let client = reqwest::Client::builder()
-            .user_agent("nevo-portfolio-tui/0.1")
+            .user_agent("nevotui/0.1")
             .build()
             .expect("failed to build http client");
         Self { client }

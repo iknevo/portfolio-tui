@@ -1,9 +1,9 @@
 [package]
-name = "portfolio-tui"
+name = "nevotui"
 version = "0.1.0"
 edition = "2021"
 description = "A terminal-based portfolio app"
-repository = "https://github.com/iknevo/portfolio-tui"
+repository = "https://github.com/iknevo/nevotui"
 license = "MIT"
 categories = ["command-line-utilities"]
 keywords = ["tui", "portfolio", "terminal"]

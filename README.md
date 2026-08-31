@@ -1,4 +1,4 @@
-# portfolio-tui
+# nevotui
 
 A terminal-based (TUI) portfolio app built in Rust with [ratatui](https://github.com/ratatui/ratatui) and [crossterm](https://github.com/crossterm-rs/crossterm). It renders a TUI version of my portfolio - projects, tech stack, work experience, blog posts, and contact links - right in your terminal, fetching live data from the web portfolio's API.
 
@@ -24,20 +24,20 @@ It is the terminal companion to the web version at [nevo.is-a.dev](https://nevo.
 ## Install
 
 ```sh
-cargo install --git https://github.com/iknevo/portfolio-tui
+cargo install --git https://github.com/iknevo/nevotui
 ```
 
 Then run it:
 
 ```sh
-portfolio-tui
+nevotui
 ```
 
 ## Run from source
 
 ```sh
-git clone https://github.com/iknevo/portfolio-tui
-cd portfolio-tui
+git clone https://github.com/iknevo/nevotui
+cd nevotui
 cargo run --release
 ```
 
